@@ -8,3 +8,5 @@ LaTeX/*.out
 Pages-docs/*/Index.zip
 Pages-docs/*/*.jpg
 Pages-docs/*/Metadata
+.DS_Store
+Pages-docs/.DS_Store
