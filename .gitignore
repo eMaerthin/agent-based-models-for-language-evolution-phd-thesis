@@ -1,0 +1,6 @@
+LaTeX/*.pdf
+LaTeX/*.aux
+LaTeX/*.lo*
+LaTeX/*.xml
+LaTeX/*.gz
+LaTeX/*.toc
