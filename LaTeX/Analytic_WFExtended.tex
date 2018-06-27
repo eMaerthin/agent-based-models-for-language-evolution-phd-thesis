@@ -1,0 +1,113 @@
+\section{Generalization of Wright-Fisher model dynamics to non-fixed population size where the population size fluctuates randomly}
+\subsection{Motivation}
+Todo: Describe motivation - maybe add few sentences to motivate the research
+\subsection{Results}
+Let me introduce the specific model with three main assumptions:
+\begin{enumerate}
+\item
+non-fixed population size,
+\item
+non-overlapping generations,
+\item
+random selection.
+\end{enumerate}
+The model is inspired directly by Wright-Fisher model without a fixed population size assumption, hence it can be considered as a generalization of the latter. Random selection feature corresponds to random mating assumption in Wright-Fisher model and means that in order to form a new generation each individual copies the state of a randomly selected parent, so no a priori defined fitness plays role except for the obvious rule that the rich gets richer.
+It is difficult to observe non-overlapping generations in the nature, however this assumption plays a crucial role in the model so cannot be relaxed. One can think of a model without this limitation but deriving analytics results will be more challenging in such a setup. On the other hand the model should be not more difficult than it has to be and it might be that after appropriate scaling this feature has none or little effect on the quantitative output however may influence the qualitative outcome.
+Further necessary assumptions are:
+\begin{enumerate}
+\item
+Start with fixed number of $n_0$ individuals - each possess a different opinion
+\item
+Expected population of each generation stays positive i.e. 
+\begin{equation}
+\mathbb{E}(\sum_{i=1}X_t(i))>0
+\end{equation}
+\item 
+Population of each generation is independent:
+\begin{equation}
+n_t\equiv\sum_{i=1}X_t(i)
+\end{equation}
+\end{enumerate}
+
+In terms of graph theory language we start with a fixed setup - initial generation $0$ consists of $n_0$ nodes. Each node $x_i$ has a different colour $i$. Every successive generation $t$ consists of $n_t$ nodes. Each node inherits a colour of its parent - a uniformly selected node from the generation $t-1$. 
+Now one initial node $i$ (from generation $0$) is selected and a following martingale is considered 
+\begin{equation}
+\{Y_t(i)=\frac{X_t(i)}{n_t}\}_{t\geq0}
+\end{equation}
+where $X_t(i)$ is a number of offsprings of node $i$ in generation $t$. For a given fixed $T>0$ we consider a following stopping time:
+\begin{equation}
+\tau=\begin{cases} t_0 &\qquad \mbox{ if } X_{t_0}(i)=0 \mbox{ for some time } t_0 \leq T \mbox{ (process dies until T) }\\ T &\qquad \mbox{ if } X_{T}(i)>0\end{cases}
+\end{equation}
+Next by applying Optional Stopping Theorem for martingale we have:
+\begin{equation}
+\mathbb{E}(Y_{\tau}(i))=\frac{1}{n_0}=\mbox{Pr}\{Y_T(i)>0\}\cdot\mathbb{E}(Y_{T}(i) | X_{T}(i)>0)
+\end{equation}
+$Pr\{Y_T(i)>0\}$ is a probability that the process will not die until time $T$. Hence, the number of colours at time $T$ is given by the formula:
+\begin{equation}
+\mathbb{E}(\mbox{\# colours at time } T)=\frac{1}{\mathbb{E}(Y_T(i) | X_T(i) >0)}
+\end{equation}
+
+In order to go further let’s switch a perspective.
+The model can be alternatively viewed as a (possibly infinite) series of urns (non-overlapping generations) where the content of each urn (population of the generation) depends only on the content of the previous urn and the capacity of the current urn. Zeroth urn is filled with $n_0$ different balls. Then the process of populating the $t$-th urn is constrained with $n_t$ drawings with replacement from the previous $t-1$-th urn filled with $n_{t-1}$ labelled balls where each ball has exactly single label and some labels could be sticked to many balls. Thus multiplicity of labels/colours/languages can be approximated using mixed Poisson distribution in the following way:
+
+Multiplicity of colours to observe in first generation $X_1$ is a discrete random variable which can be approximated by poisson distribution with $\lambda_1=\frac{n_1}{n_0}$, so $Pr\{X_1(i)=0\}=\exp(-\lambda_1)$ meaning that expected number of $\exp(-\frac{n_1}{n_0})$ colours will disappear from the system at the first time step.
+In general multiplicity of colurs in the first urn is fully described by the Poisson distribution:
+\begin{equation}
+P(X_1(i)=k)=\mbox{exp}(-\lambda_1)\frac{\lambda_1^k}{k!}
+\end{equation}
+Let’s proceed to the content of the next urn. We start from stating an exact formula for conditional probability of $X_2(i)$ under condition that we know the value of $X_1(i)$ (i.e. multiplicity of $i$-th colour in the first urn is known apriori):
+\begin{equation}
+P\left(X_2(i)=l|X_1(i)=k\right)=\mbox{exp}\left(-k\lambda_2\right)\frac{\left(k\lambda_2\right)^l}{l!}
+\end{equation}
+where $\lambda_i\equiv\frac{n_i}{n_{i-1}}$ is a factor which corresponds to scaling of the population in the $i$-th step. The above formula is well defined only for $X_1(i)>0$. Let’s further assume that $P(X_t(i)=0|X_{t-1}(i)=0)\equiv1$ (so if a colour/a label is lost at some point, then it cannot be pushed back in the system in the future). Now we can calculate unconditional probability of $X_2(i)$ using the law of total probability:
+\begin{equation*}
+\begin{split}
+P\left(X_2(i)=l\right) & =\sum_{k}P\left(X_2(i)=l|X_1(i)=k\right)P\left(X_1(i)=k\right) \\ & =\sum_{k=1}\mbox{exp}\left(-k\lambda_2\right)\frac{\left(k\lambda_2\right)^l}{l!}\mbox{exp}\left(-\lambda_1\right)\frac{\left(\lambda_1\right)^k}{k!} + \delta_{l0}\cdot\mbox{exp}\left(-\lambda_1\right)
+\end{split}
+\end{equation*}
+
+This can be simplified by observing a fact that under the sum we have a sum of probability mass function of another Poisson distribution (except for mass of point $0$ and normalization factor). The computation is lengthy but straightforward and will be given in details only for $X_2(i)$ as further time steps involves the same method:
+\begin{equation*}
+\begin{split}
+P\left(X_2(i)=0\right) & =\sum_{k}P\left(X_2(i)=0|X_1(i)=k\right)P\left(X_1(i)=k\right) \\ & =\sum_{k=1}\mbox{exp}\left(-k\lambda_2\right)\mbox{exp}\left(-\lambda_1\right)\frac{\left(\lambda_1\right)^k}{k!} + \mbox{exp}\left(-\lambda_1\right) \\ &
+=\mbox{exp}\left(-\lambda_1\right)\left(\sum_{k=1}\frac{\left(\lambda_1\mbox{exp}\left(-\lambda_2\right)\right)^k}{k!} + 1 \right) \\ &
+=\mbox{exp}\left(-\lambda_1\right)\left(\left(1-\mbox{exp}
+\left(-\lambda_1\mbox{exp}\left(-\lambda_2\right)\right)\right)\mbox{exp}\left(\lambda_1
+\mbox{exp}\left(-\lambda_2\right)\right)+1\right)
+\end{split}
+\end{equation*}
+
+Finally, the calculation above gives the elegant exact formula for probability of extinction until $t=2$:
+\begin{equation}
+P(X_2(i)=0)=\mbox{exp}\left(-\lambda_1\left(1-\mbox{exp}\left(-\lambda_2\right)\right)\right)
+\end{equation}
+TODO: Now the missing part - please compute explicit the value of $P(X_2(i)=l>0)$.
+Without that computation, all remaining results are not valid.
+Please check \url{https://en.wikipedia.org/wiki/Poisson_distribution#Higher_moments} for further reference.
+
+
+In fact the following exact formula is valid for any $t>1$:
+\begin{equation}
+P(X_t(i)=0)=\mbox{exp}\left(- \lambda_1 \left(\cdots\left(1-\mbox{exp}\left(- \lambda_{t-1}\left(1 - \mbox{exp}\left(-\lambda_{n_t}\right)\right)\right)\right)\cdots\right)\right)
+\end{equation}
+
+Proof of this formula is based on induction and very useful property explained above on the recurrent use of sum of probability mass function except mass point $0$ - that for any $a$, $b$ and $\left(x_k\right)_{k\in \mathbb{N}}$ being a collection of positive iterators, we have: 
+\begin{equation}
+\sum_{x_k=1}\exp(a)^{x_k}\frac{(x_{k-1}b)^{x_k}}{x_k!}=
+\exp(x_{k-1}b\exp(a))-1
+\end{equation}
+
+\begin{equation*}
+\begin{split}
+P\left(X_{t}(i)=0\right) & =\sum_{x_{t-1}}P\left(X_{t}(i)=0|X_{t-1}(i)=x_{t-1}\right)P\left(X_{t-1}(i)=x_{t-1}\right) \\ & 
+=\sum_{x_{t-1}}P\left(X_{t}(i)=0|X_{t-1}(i)=x_{t-1}\right)\cdots \sum_{x_{1}}P\left(X_{2}(i)=x_{2}|X_{1}(i)=x_{1}\right)P\left(X_{1}(i)=x_1\right)
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+& P\left(X_{t}(i)=0\right) \\ & = \sum_{x_{t-1}=1} \exp(-\lambda_{t})^{x_{t-1}}
+\sum_{x_{t-2}=1} \exp(- \lambda_{t-1})^{x_{t-2}}\frac{\left(x_{t-2}\lambda_{t-1}\right)^{x_{t-1}}}{x_{t-1}!} \cdots \sum_{x_{1}=1} \exp( - \lambda_1)\frac{\lambda_1^{x_1}}{x_1!} + P\left(X_{t-1}(i)=0\right)
+\end{split}
+\end{equation*}
+
