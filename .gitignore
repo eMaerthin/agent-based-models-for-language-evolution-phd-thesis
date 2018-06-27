@@ -4,3 +4,4 @@ LaTeX/*.lo*
 LaTeX/*.xml
 LaTeX/*.gz
 LaTeX/*.toc
+LaTeX/*.out
